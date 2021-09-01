@@ -6,7 +6,7 @@ import { useQuery } from "@apollo/react-hooks";
 import { Body, Button, Header } from "./components";
 import useWeb3Modal from "./hooks/useWeb3Modal";
 
-import { addresses, abis } from "@project/contracts";
+import { addresses, abis } from "./contracts";
 import GET_TRANSFERS from "./graphql/subgraph";
 
 async function getSynthLoot(address) {
