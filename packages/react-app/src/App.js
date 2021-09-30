@@ -35,7 +35,7 @@ function WalletButton({ label, provider, loadWeb3Modal, logoutOfWeb3Modal }) {
           }
         }}
       >
-        {!provider ? "Connect Wallet" :  "Disconnect" }
+        {!provider ? "Connect Wallet" :  "Disconnect Wallet" }
       </Button>
       <WalletLabel>{label}</WalletLabel>
     </div>
