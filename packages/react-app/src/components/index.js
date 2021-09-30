@@ -44,11 +44,16 @@ export const Button = styled.button`
   font-size: 16px;
   text-align: center;
   text-decoration: none;
-  margin: 0px 20px;
+  margin: 10px 20px;
   padding: 12px 24px;
 
   ${props => props.hidden && "hidden"} :focus {
     border: none;
     outline: none;
   }
+`;
+
+export const WalletLabel = styled.div`
+  margin: 0px 20px;
+  padding: 12px 24px;
 `;

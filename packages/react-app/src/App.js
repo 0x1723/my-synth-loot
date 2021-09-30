@@ -3,7 +3,7 @@ import { Contract } from "@ethersproject/contracts";
 import { getDefaultProvider } from "@ethersproject/providers";
 import { useQuery } from "@apollo/react-hooks";
 
-import { Body, Button, Header } from "./components";
+import { Body, Button, Header, WalletLabel } from "./components";
 import useWeb3Modal from "./hooks/useWeb3Modal";
 
 import { addresses, abis } from "./contracts";
@@ -18,10 +18,14 @@ async function getSynthLoot(address) {
   return (lootImage)
 }
 
-function WalletButton({ provider, loadWeb3Modal, logoutOfWeb3Modal }) {
+async function getEnsName(provider, address) {
+  var name = await provider.lookupAddress(provider.provider.selectedAddress);
+  return (name)
+}
+
+function WalletButton({ label, provider, loadWeb3Modal, logoutOfWeb3Modal }) {
   return (
     <div>
-      {provider ? <p>{provider.provider.selectedAddress}</p> : <div></div>}
       <Button
         onClick={() => {
           if (!provider) {
@@ -31,8 +35,9 @@ function WalletButton({ provider, loadWeb3Modal, logoutOfWeb3Modal }) {
           }
         }}
       >
-        {!provider ? "Connect Wallet" : "Disconnect Wallet"}
+        {!provider ? "Connect Wallet" :  "Disconnect" }
       </Button>
+      <WalletLabel>{label}</WalletLabel>
     </div>
   );
 }
@@ -41,6 +46,7 @@ function App() {
   const { loading, error, data } = useQuery(GET_TRANSFERS);
   const [provider, loadWeb3Modal, logoutOfWeb3Modal] = useWeb3Modal();
   const [synthLootImg, setSynthLootImg] = useState("");
+  const [ensName, setEnsName] = useState("");
 
   React.useEffect(() => {
     if (loading) {
@@ -53,12 +59,19 @@ function App() {
     getSynthLoot(provider.provider.selectedAddress).then((image) => {
       setSynthLootImg(image);
     });
+    getEnsName(provider, provider.provider.selectedAddress).then((ensName) => {
+      if (ensName == null) {
+        setEnsName(provider.provider.selectedAddress.substring(0,8));
+      } else {
+        setEnsName(ensName);
+      }
+    });
   }
 
   return (
     <div>
       <Header>
-        <WalletButton provider={provider} loadWeb3Modal={loadWeb3Modal} logoutOfWeb3Modal={logoutOfWeb3Modal}  />
+        <WalletButton label={ensName} provider={provider} loadWeb3Modal={loadWeb3Modal} logoutOfWeb3Modal={logoutOfWeb3Modal}  />
       </Header>
       <Body>
         {provider ? <img alt="Synthetic Loot of your wallet" src={synthLootImg}></img> : <div></div>}
